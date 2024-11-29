@@ -28,3 +28,30 @@ body {
 input[type="datetime-local"] {
   color-scheme: light dark;
 }
+
+/* Wallet button styling */
+.wallet-adapter-button {
+  background-color: var(--foreground) !important;
+  color: var(--background) !important;
+  border-radius: 9999px !important;
+  height: 40px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+.wallet-adapter-button:hover {
+  background-color: #383838 !important;
+}
+
+.dark .wallet-adapter-button:hover {
+  background-color: #ccc !important;
+}
+
+.wallet-adapter-modal-wrapper {
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--foreground) !important;
+}
