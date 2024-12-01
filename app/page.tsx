@@ -4,9 +4,14 @@ import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useWallet } from '@solana/wallet-adapter-react'
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
+import dynamic from 'next/dynamic'
+
+const WalletMultiButton = dynamic(
+  () => import('@solana/wallet-adapter-react-ui').then(mod => mod.WalletMultiButton),
+  { ssr: false }
+)
 
 export default function Home() {
   const { publicKey } = useWallet()
@@ -65,7 +70,7 @@ export default function Home() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="recipient">Recipient's Wallet Address</Label>
+                <Label htmlFor="recipient">Recipient&apos;s Wallet Address</Label>
                 <Input
                   id="recipient"
                   type="text"

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import type { Metadata } from 'next'
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { WalletProvider } from '@/components/providers/WalletProvider';
+import WalletProviderWrapper from '@/components/providers/WalletProvider'
 import { StorageProvider } from '@/components/providers/StorageProvider'
 import { Toaster } from "@/components/ui/toaster"
 
@@ -23,11 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${inter.className} dark bg-background`}>
-        <WalletProvider>
+        <WalletProviderWrapper>
           <StorageProvider>
             {children}
           </StorageProvider>
-        </WalletProvider>
+        </WalletProviderWrapper>
         <Toaster />
       </body>
     </html>
