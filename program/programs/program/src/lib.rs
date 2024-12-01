@@ -3,7 +3,7 @@ use anchor_lang::prelude::*;
 declare_id!("EmxCJ3fwCbbHKTjpP1qSQsGeVCy1abkfEqabsBBnwRCw");
 
 #[program]
-pub mod time_capsule {
+pub mod time_capsule {  
     use super::*;
 
     pub fn create_capsule(
@@ -35,6 +35,10 @@ pub mod time_capsule {
         );
         Ok(())
     }
+
+    pub fn get_capsules_for_wallet(ctx: Context<GetCapsulesForWallet>) -> Result<()> {
+        Ok(())
+    }
 }
 
 #[account]
@@ -45,14 +49,23 @@ pub struct Capsule {
     pub encrypted_aes_key: String,
     pub video_cid: String,
     pub created_at: i64,
+    pub accessed: bool,
 }
 
 #[derive(Accounts)]
+#[instruction(recipient: Pubkey, release_time: i64)]
 pub struct CreateCapsule<'info> {
     #[account(
         init,
         payer = creator,
-        space = 8 + 32 + 32 + 8 + 200 + 200 + 8
+        space = 8 + 32 + 32 + 8 + 200 + 200 + 8 + 1,
+        seeds = [
+            b"capsule",
+            creator.key().as_ref(),
+            recipient.key().as_ref(),
+            &release_time.to_le_bytes()[..8]
+        ],
+        bump
     )]
     pub capsule: Account<'info, Capsule>,
     #[account(mut)]
@@ -65,6 +78,11 @@ pub struct AccessCapsule<'info> {
     #[account(mut)]
     pub capsule: Account<'info, Capsule>,
     pub requestor: Signer<'info>,
+}
+
+#[derive(Accounts)]
+pub struct GetCapsulesForWallet<'info> {
+    pub wallet: Signer<'info>,
 }
 
 #[error_code]

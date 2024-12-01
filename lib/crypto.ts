@@ -27,13 +27,13 @@ export async function encryptFile(
   // Export AES key
   const exportedKey = await window.crypto.subtle.exportKey('raw', aesKey)
   
-  // For now, we'll just base64 encode the key
-  // TODO: Implement proper key encryption with recipient's public key
+  // TODO: In production, encrypt the AES key with recipient's public key
+  // For now, we'll just base64 encode it
   const encryptedKey = btoa(String.fromCharCode(...new Uint8Array(exportedKey)))
 
   // Create new File with encrypted content
   const encryptedFile = new File(
-    [iv, new Uint8Array(encryptedContent)], // Prepend IV to encrypted content
+    [new Uint8Array([...iv, ...new Uint8Array(encryptedContent)])],
     file.name,
     { type: 'application/octet-stream' }
   )
