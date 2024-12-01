@@ -1,37 +1,35 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
-import ClientWalletProvider from "./providers/WalletProvider";
+import type { ReactNode } from 'react'
+import type { Metadata } from 'next'
+import { Inter } from "next/font/google"
+import "./globals.css"
+import { WalletProvider } from '@/components/providers/WalletProvider';
+import { StorageProvider } from '@/components/providers/StorageProvider'
+import { Toaster } from "@/components/ui/toaster"
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "ChronoVault",
-  description: "Solana Time Capsule App",
-  other: {
-    'format-detection': 'telephone=no, date=no, email=no, address=no'
-  }
-};
+  title: "Chrono Vault - Time Capsule App",
+  description: "A decentralized time capsule app built on Solana",
+}
+
+type RootLayoutProps = {
+  children: ReactNode
+}
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: RootLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ClientWalletProvider>{children}</ClientWalletProvider>
+    <html lang="en" className="dark">
+      <body className={`${inter.className} dark bg-background`}>
+        <WalletProvider>
+          <StorageProvider>
+            {children}
+          </StorageProvider>
+        </WalletProvider>
+        <Toaster />
       </body>
     </html>
-  );
+  )
 }

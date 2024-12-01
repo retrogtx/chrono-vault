@@ -2,7 +2,6 @@
 
 # dependencies
 /node_modules
-tasks.md
 /.pnp
 .pnp.*
 .yarn/*
@@ -10,7 +9,7 @@ tasks.md
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-
+tasks.md
 # testing
 /coverage
 

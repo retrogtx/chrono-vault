@@ -4,14 +4,14 @@
 resolution = true
 skip-lint = false
 
-[programs.devnet]
-chrono_vault_program = "FcD9P4UPLe4rgeN2gHTV7VutfhiK3uHddtMj9JkTX3qV"
+[programs.localnet]
+program = "EmxCJ3fwCbbHKTjpP1qSQsGeVCy1abkfEqabsBBnwRCw"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "devnet"
+cluster = "Localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

@@ -1,12 +1,12 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { ChronoVaultProgram } from "../target/types/chrono_vault_program";
+import { Program } from "../target/types/program";
 
-describe("chrono-vault-program", () => {
+describe("program", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
 
-  const program = anchor.workspace.ChronoVaultProgram as Program<ChronoVaultProgram>;
+  const program = anchor.workspace.Program as Program<Program>;
 
   it("Is initialized!", async () => {
     // Add your test here.

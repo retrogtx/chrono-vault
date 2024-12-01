@@ -1,116 +1,103 @@
-'use client';
+'use client'
 
-import { useWallet } from '@solana/wallet-adapter-react';
-import { useFileUpload } from './hooks/useFileUpload';
-import { useRef } from 'react';
-import ClientWalletButton from './components/ClientWalletProvider';
+import { useState } from 'react'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { useWallet } from '@solana/wallet-adapter-react'
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 
 export default function Home() {
-  const { connected } = useWallet();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const { file, error, onDrop, onFileSelect } = useFileUpload();
+  const { publicKey } = useWallet()
+  const [file, setFile] = useState<File | null>(null)
+  const [recipientAddress, setRecipientAddress] = useState('')
+  const [releaseDate, setReleaseDate] = useState('')
+  
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0])
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!file || !recipientAddress || !releaseDate || !publicKey) return
+
+    try {
+      // TODO: Implement file encryption and upload
+      // 1. Generate AES key
+      // 2. Encrypt file
+      // 3. Upload to IPFS
+      // 4. Encrypt AES key with recipient's public key
+      // 5. Create time capsule on Solana
+    } catch (error) {
+      console.error('Error creating time capsule:', error)
+    }
+  }
 
   return (
-    <div className="grid grid-rows-[auto_1fr_auto] min-h-screen p-8 pb-20 gap-8 sm:p-20">
-      <header className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold">Chrono Vault</h1>
-          <span className="font-[family-name:var(--font-geist-mono)] text-sm">
-            Time Capsule
-          </span>
-        </div>
-        <ClientWalletButton />
-      </header>
-
-      <main className="flex flex-col items-center justify-center gap-8">
-        {!connected ? (
-          <div className="text-center">
-            <h2 className="text-xl font-bold mb-4">Welcome to ChronoVault</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Connect your wallet to create or view time capsules
-            </p>
-          </div>
-        ) : (
-          <div className="max-w-md w-full space-y-8">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold mb-2">Create Time Capsule</h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Upload a video and set a future date for your recipient to view it
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-                onDrop={onDrop}
-                className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400 dark:hover:border-gray-600 transition-colors"
-              >
-                <input
-                  ref={fileInputRef}
+    <main className="container mx-auto p-4">
+      <div className="flex flex-col items-center justify-center min-h-screen py-2">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Create Time Capsule</CardTitle>
+            <CardDescription>
+              Upload a video and set a future date for your recipient to view it.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="wallet">Wallet Connection</Label>
+                <WalletMultiButton className="w-full" />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="file">Video File</Label>
+                <Input
+                  id="file"
                   type="file"
                   accept="video/*"
-                  onChange={onFileSelect}
-                  className="hidden"
+                  onChange={handleFileChange}
+                  required
                 />
-                <div className="space-y-2">
-                  <div className="text-4xl mb-2">
-                    {file ? '📼' : '📤'}
-                  </div>
-                  <div className="text-sm font-medium">
-                    {file ? file.name : 'Drop your video here or click to browse'}
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {error ? (
-                      <span className="text-red-500">{error}</span>
-                    ) : (
-                      file ? `${(file.size / (1024 * 1024)).toFixed(2)}MB` : 'Maximum file size: 500MB'
-                    )}
-                  </div>
-                </div>
               </div>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Recipient&apos;s Wallet Address
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-transparent"
-                    placeholder="Enter Solana wallet address"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Release Date
-                  </label>
-                  <input
-                    type="datetime-local"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-transparent"
-                    min={new Date().toISOString().slice(0, 16)}
-                  />
-                </div>
-
-                <button 
-                  className="w-full bg-foreground text-background rounded-full py-3 font-medium hover:bg-[#383838] dark:hover:bg-[#ccc] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!file}
-                >
-                  Create Time Capsule
-                </button>
+              <div className="space-y-2">
+                <Label htmlFor="recipient">Recipient's Wallet Address</Label>
+                <Input
+                  id="recipient"
+                  type="text"
+                  value={recipientAddress}
+                  onChange={(e) => setRecipientAddress(e.target.value)}
+                  placeholder="Enter Solana wallet address"
+                  required
+                />
               </div>
-            </div>
-          </div>
-        )}
-      </main>
 
-      <footer className="text-center text-sm text-gray-500 dark:text-gray-400">
-        Powered by Solana blockchain
-      </footer>
-    </div>
-  );
+              <div className="space-y-2">
+                <Label htmlFor="release">Release Date</Label>
+                <Input
+                  id="release"
+                  type="datetime-local"
+                  value={releaseDate}
+                  onChange={(e) => setReleaseDate(e.target.value)}
+                  required
+                />
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={!publicKey || !file || !recipientAddress || !releaseDate}
+              >
+                Create Time Capsule
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </main>
+  )
 }
